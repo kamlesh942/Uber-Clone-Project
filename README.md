@@ -167,3 +167,72 @@ Next steps (optional additions)
 - Add an automated integration test (using a test framework such as Jest + Supertest) that verifies the registration flow: valid registration, validation failures, duplicate email handling.
 
 If you'd like, I can now add the curl/Postman examples as copyable commands, or create an integration test that programmatically exercises the endpoint. Tell me which you'd prefer.
+
+## User Login — POST /users/login
+
+Purpose
+
+Authenticate an existing user and return a JWT along with the user's public details. The login endpoint verifies the provided email and password, and issues a token when credentials are valid.
+
+Where the endpoint is mounted
+
+The route is available under `/users`, so the full path is `/users/login`.
+
+Request expectations
+
+The login endpoint expects a JSON body containing `email` and `password`.
+
+- `email`: required string, must be a valid email format.
+- `password`: required string, minimum length 6.
+
+Example request payload (JSON)
+
+{
+  "email": "alice@example.com",
+  "password": "S3cureP@ssw0rd"
+}
+
+How authentication works (implementation notes)
+
+- The route uses `express-validator` middleware to validate input before the controller runs.
+- The controller looks up the user by email and requests the password field explicitly (the password is stored with select: false by default in the model).
+- The plaintext password from the request is compared to the stored hash using bcrypt via the model's `comparePassword` method. If the comparison succeeds, a JWT is generated and returned.
+
+Quick curl example (how to call the endpoint)
+
+curl -X POST "http://localhost:3000/users/login" with a JSON body containing email and password.
+
+Successful response
+
+When credentials are valid, the server returns HTTP 200 OK. The response includes a JWT token for subsequent authenticated requests and the authenticated user's public details.
+
+Example success response (shape)
+
+{
+  "token": "<jwt-token>",
+  "user": {
+    "_id": "<mongodb-object-id>",
+    "fullname": { "firstname": "Alice", "lastname": "Johnson" },
+    "email": "alice@example.com",
+    "socketId": null
+  }
+}
+
+Error responses
+
+- Validation failure: 400 Bad Request. The response contains an array of validation error objects describing which fields failed validation.
+- Invalid credentials: 401 Unauthorized. Returned when the email is not found or the password comparison fails; the response should contain a clear message such as "Email or Password is Incorrect".
+- Server/database error: 500 Internal Server Error.
+
+Status code summary for login
+
+- 200 OK — authentication succeeded, token and user returned.
+- 400 Bad Request — validation failed (missing/invalid email or password).
+- 401 Unauthorized — email not found or password mismatch.
+- 500 Internal Server Error — unexpected server-side failure.
+
+Troubleshooting hints for login
+
+- If login always fails even with correct credentials, verify that the user row contains a hashed password and that `comparePassword` is using the correct bcrypt parameters.
+- Ensure the login controller requests the password field when finding the user (for example, by selecting the password explicitly) because the model marks password with `select: false`.
+- Confirm `JWT_SECRET` is set so tokens can be generated.
