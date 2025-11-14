@@ -236,3 +236,148 @@ Troubleshooting hints for login
 - If login always fails even with correct credentials, verify that the user row contains a hashed password and that `comparePassword` is using the correct bcrypt parameters.
 - Ensure the login controller requests the password field when finding the user (for example, by selecting the password explicitly) because the model marks password with `select: false`.
 - Confirm `JWT_SECRET` is set so tokens can be generated.
+
+## User Profile — GET /users/profile
+
+Purpose
+
+Retrieve the authenticated user's profile information. This endpoint requires a valid JWT token and returns the authenticated user's full details (excluding the password).
+
+Where the endpoint is mounted
+
+The route is available under `/users`, so the full path is `/users/profile`.
+
+Authentication requirement
+
+This is a protected endpoint. A valid JWT token must be provided in one of two ways:
+
+- As a cookie named `token` in the request.
+- In the Authorization header as a Bearer token (format: Authorization: Bearer <token>).
+
+The authentication middleware (`authUser`) validates the token, checks it against the blacklist, verifies the JWT signature, and retrieves the user before passing control to the controller.
+
+Request expectations
+
+The GET request has no request body. Only the JWT token is required (via cookie or header).
+
+Example request (with token in Authorization header)
+
+GET /users/profile
+Authorization: Bearer <jwt-token>
+
+Successful response
+
+When the token is valid and the user is authenticated, the server returns HTTP 200 OK with the user's profile data.
+
+Example success response (shape)
+
+{
+  "_id": "<mongodb-object-id>",
+  "fullname": { "firstname": "Alice", "lastname": "Johnson" },
+  "email": "alice@example.com",
+  "socketId": null
+}
+
+Error responses
+
+- Missing or invalid token: 401 Unauthorized. The response contains a message such as "Unauthorized User".
+- Token is blacklisted (user logged out): 401 Unauthorized. The response contains a message such as "Logged out user - Unauthorized".
+- Token signature verification fails: 401 Unauthorized.
+- Server/database error: 500 Internal Server Error.
+
+Status code summary for profile
+
+- 200 OK — authentication succeeded, user profile returned.
+- 401 Unauthorized — token missing, invalid, or blacklisted.
+- 500 Internal Server Error — unexpected server-side failure.
+
+Implementation notes
+
+- The `authUser` middleware must run before this endpoint to populate `req.user`.
+- The endpoint simply returns `req.user`, which was populated by the middleware after token verification.
+- The password is never included in the response (the model's password field has `select: false`).
+
+Troubleshooting hints for profile
+
+- If you receive a 401 error, verify the token is valid and has not expired.
+- Check that the token was not blacklisted (user did not log out).
+- Ensure the Authorization header format is correct: "Bearer <token>".
+
+---
+
+## User Logout — GET /users/logout
+
+Purpose
+
+Log out the authenticated user by blacklisting the current JWT token, preventing further use of that token for authentication.
+
+Where the endpoint is mounted
+
+The route is available under `/users`, so the full path is `/users/logout`.
+
+Authentication requirement
+
+This is a protected endpoint. A valid JWT token must be provided in one of two ways:
+
+- As a cookie named `token` in the request.
+- In the Authorization header as a Bearer token (format: Authorization: Bearer <token>).
+
+The authentication middleware validates the token before the logout controller runs.
+
+Request expectations
+
+The GET request has no request body. Only the JWT token is required (via cookie or header).
+
+Example request (with token in Authorization header)
+
+GET /users/logout
+Authorization: Bearer <jwt-token>
+
+How logout works (implementation notes)
+
+- The authenticated user's token is extracted from either the cookie or the Authorization header.
+- The token is added to the blacklist (stored in the `blackListToken` collection).
+- The server clears the `token` cookie on the client side.
+- A success message is returned to confirm logout.
+
+Successful response
+
+When logout succeeds, the server returns HTTP 200 OK and clears the token cookie.
+
+Example success response (shape)
+
+{
+  "message": "Loged out"
+}
+
+Error responses
+
+- Missing or invalid token: 401 Unauthorized. The response contains a message such as "Unauthorized User".
+- Token is already blacklisted: The logout may still succeed (if the middleware allows it) and return 200.
+- Server/database error: 500 Internal Server Error.
+
+Status code summary for logout
+
+- 200 OK — logout succeeded, token blacklisted and cookie cleared.
+- 401 Unauthorized — token missing, invalid, or already blacklisted.
+- 500 Internal Server Error — unexpected server-side failure (e.g., database write error).
+
+Implementation notes
+
+- The `authUser` middleware must run before this endpoint to verify the user is authenticated.
+- The token is extracted from `req.cookies.token` or the Authorization header.
+- The token is stored in the `blackListToken` collection to prevent reuse.
+- The `token` cookie is cleared from the client to remove the stored token.
+
+After logout
+
+- The blacklisted token can no longer be used to access protected endpoints.
+- The authentication middleware checks the blacklist and rejects blacklisted tokens with a 401 response.
+- The client must discard or clear the token locally and obtain a new token by logging in again.
+
+Troubleshooting hints for logout
+
+- If you receive a 401 error, verify the token is still valid at the time of logout.
+- Check that the Authorization header format is correct if using header-based authentication.
+- If logout returns 200 but the token still works, verify the blacklist middleware is properly checking the `blackListToken` collection.
+- Ensure `JWT_SECRET` and database connectivity are properly configured.
