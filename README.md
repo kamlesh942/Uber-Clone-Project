@@ -381,3 +381,33 @@ Troubleshooting hints for logout
 - Check that the Authorization header format is correct if using header-based authentication.
 - If logout returns 200 but the token still works, verify the blacklist middleware is properly checking the `blackListToken` collection.
 - Ensure `JWT_SECRET` and database connectivity are properly configured.
+
+## Captain Registration — POST /captains/register
+
+Purpose
+
+Register a new captain (driver) with vehicle information. The server validates input, hashes the password, stores the captain and vehicle details, and returns a JWT token plus the captain's profile.
+
+Route
+
+The endpoint is at `/captains/register`.
+
+What to send
+
+Send a JSON request with captain name, email, password, and vehicle details. The captain's first name must be at least 3 characters, the email must be valid and unique, and the password must be at least 6 characters. The vehicle object requires: color (min 3 chars), plate number (min 3 chars), capacity (integer >= 1), and vehicleType which must be one of car, motorcycle, or auto.
+
+Example: a captain named Bob Smith with email bob.captain@example.com, password CaptainP@ss1, driving a blue car with plate ABC123 and capacity 4.
+
+Successful response
+
+Returns HTTP 201 Created with a JSON object containing the JWT token and the created captain's details (email, fullname with firstname and lastname, vehicle with color, plate, capacity, and vehicleType). The password is not included.
+
+Error responses
+
+400 Bad Request for validation failures (invalid email, firstname too short, password too short, invalid vehicle type, etc.) or if a captain with the same email already exists. 500 Internal Server Error for unexpected database or server issues.
+
+Implementation flow
+
+The controller receives the request, checks for duplicate emails, hashes the password with bcrypt, calls the service to create the captain document, generates a JWT token, and returns it with the captain object.
+
+---
