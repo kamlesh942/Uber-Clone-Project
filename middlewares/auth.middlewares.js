@@ -33,7 +33,8 @@ module.exports.authUser = async (req, res, next) => {
 }
 
 module.exports.authCaptain = async (req, res, next) => {
-    const token = req.cookies.token || req.headers.authCaptain(authorization)?.split('')[1];
+    const token = req.cookies.token || req.headers.authorization?.split('')[1];
+    console.log("Auth Captain Middleware Token:", token);
     if(!token){
         return res.status(401).json({message: "Unauthorized Captain"});
     }
@@ -45,10 +46,12 @@ module.exports.authCaptain = async (req, res, next) => {
 
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.captain = await captainModel.findById(decoded._id);
+        const captain = await captainModel.findById(decoded._id);
         req.captain = captain;
+        return next();
     }
     catch(err){
+
         res.status(401).json({message: "Unauthorized Captain"});
     }
 }

@@ -24,10 +24,12 @@ module.exports.registerCaptain = async (req, res, next) => {
         },
         email,
         password: hashedPassword,
-        color : vehicle.color,
-        plate : vehicle.plate,
-        capacity : vehicle.capacity,
-        vehicleType : vehicle.vehicleType, 
+        vehicle :{
+            color : vehicle.color,
+            plate : vehicle.plate,
+            capacity : vehicle.capacity,
+            vehicleType : vehicle.vehicleType, 
+        }
     });
 
     const token = captain.generateAuthToken();
@@ -41,10 +43,10 @@ module.exports.loginCaptain = async (req, res, next) =>{
     if(!errors.isEmpty()){
         return res.status(400).json({errors : errors.array()});
     }
+
     const {email, password} = req.body;
 
     const captain = await captainModel.findOne({email}).select("+password");
-
     if(!captain){
         return res.status(401).json({message : "Email or Password is Incorrect"});
 
