@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const UserLogin = () => {
@@ -6,9 +6,14 @@ const UserLogin = () => {
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState([]);
 
+   useEffect(() => {
+      console.log("Updated userData:", userData);
+    }, [userData]);
+
   const submitHandler = (e) => {
     e.preventDefault();
     setUserData({ email: email, password: password });
+    
     setEmail("");
     setPassword("");
   };
