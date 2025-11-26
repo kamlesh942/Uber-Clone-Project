@@ -17,7 +17,7 @@ const CaptainSignup = () => {
     
 
     setUserData({
-      userName: {
+      fullName: {
         firstName: firstName,
         lastName: lastName,
       },
@@ -32,7 +32,7 @@ const CaptainSignup = () => {
     setLastName("");
   };
   return (
-    <div className="px-5 py-5 flex flex-col justify-between h-screen">
+    <div className="px-5 py-5 flex flex-col justify-between min-h-full">
       <div>
         <img
           className="w-16 mb-7"
