@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link , useNavigate} from "react-router-dom";
+import axios from "axios";
+import { UserContext } from "../context/userContext";
 
 const UserSignup = () => {
   const [email, setEmail] = useState("");
@@ -8,23 +10,33 @@ const UserSignup = () => {
   const [lastName, setLastName] = useState("");
   const [userData, setUserData] = useState({});
 
+  const Navigate = useNavigate();
+  const {user, setUser} = useContext(UserContext);
+
   // ✅ Correct place for useEffect
   useEffect(() => {
     console.log("Updated userData:", userData);
   }, [userData]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-
-    setUserData({
+    
+    
+    const newUSer = {
       userName: {
         firstName,
         lastName,
       },
       email,
       password,
-    });
-
+    };
+    const response = await axios.post(`${import.meta.env.process.VITE_BASE_URL}/user/signup`, newUSer);
+      if(response.status === 201){
+        const data = response;
+        console.log(data)
+        setUser(data);
+        Navigate("/home");
+      }
 
     setEmail("");
     setPassword("");
