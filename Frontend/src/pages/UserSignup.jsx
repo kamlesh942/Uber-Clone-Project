@@ -23,17 +23,18 @@ const UserSignup = () => {
     
     
     const newUSer = {
-      userName: {
-        firstName,
-        lastName,
+      fullname: {
+        firstname:firstName,
+        lastname: lastName,
       },
-      email,
-      password,
+      email: email,
+      password: password,
     };
-    const response = await axios.post(`${import.meta.env.process.VITE_BASE_URL}/user/signup`, newUSer);
+    // console.log("URL =", `${import.meta.env.VITE_BASE_URL}/user/signup`);
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUSer);
       if(response.status === 201){
-        const data = response;
-        console.log(data)
+        const data = response.data;
         setUser(data);
         Navigate("/home");
       }
