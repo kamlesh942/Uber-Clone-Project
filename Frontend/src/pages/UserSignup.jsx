@@ -14,9 +14,9 @@ const UserSignup = () => {
   const {user, setUser} = useContext(UserContext);
 
   // ✅ Correct place for useEffect
-  useEffect(() => {
-    console.log("Updated userData:", userData);
-  }, [userData]);
+  // useEffect(() => {
+  //   console.log("Updated userData:", userData);
+  // }, [userData]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -36,6 +36,7 @@ const UserSignup = () => {
       if(response.status === 201){
         const data = response.data;
         setUser(data);
+        localStorage.setItem("token", data.token);
         Navigate("/home");
       }
 

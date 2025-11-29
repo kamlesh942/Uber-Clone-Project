@@ -11,9 +11,9 @@ const UserLogin = () => {
   const Navigate = useNavigate();
   const {user, setUser} = useContext(UserContext);
 
-   useEffect(() => {
-      console.log("Updated userData:", userData);
-    }, [userData]);
+  //  useEffect(() => {
+  //     console.log("Updated userData:", userData);
+  //   }, [userData]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -27,6 +27,7 @@ const UserLogin = () => {
     if(response.status === 200){
       const data = response.data;
       setUser(data.user);
+      localStorage.setItem("token", data.token);
       Navigate("/home");
     }
     setEmail("");
