@@ -1,35 +1,61 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import { Link , useNavigate} from "react-router-dom";
+import axios from "axios";
+import { CaptainContext } from "../context/captainContext.jsx";
 
 const CaptainSignup = () => {
+
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userData, setUserData] = useState({});
+  const [vehicleColor, setVehicleColor] = useState("");
+  const [vehiclePlate, setVehiclePlate] = useState("");
+  const [vehicleCapacity, setVehicleCapacity] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
 
+  const {captain, setCaptain} = React.useContext(CaptainContext);
 
   useEffect(() => {
       console.log("Updated userData:", userData);
     }, [userData]);
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     
 
-    setUserData({
+    const captainData = {
       fullName: {
         firstName: firstName,
         lastName: lastName,
       },
       email: email,
       password: password,
-    });
+      vehicle: {
+        color: vehicleColor,
+        plate: vehiclePlate,
+        capacity: vehicleCapacity,
+        vehicleType: vehicleType,
+      },
+    };
     
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/captains/signup`, captainData);
+    
+    console.log("Signup response:", response.data);
+    setUserData(response.data);
+    setCaptain(response.data);
+    navigate("/captain-dashboard");
 
     setEmail("");
     setPassword("");
     setFirstName("");
     setLastName("");
+    setVehicleColor("");
+    setVehiclePlate("");
+    setVehicleCapacity("");
+    setVehicleType("");
   };
   return (
     <div className="px-5 py-5 flex flex-col justify-between min-h-full">
@@ -89,6 +115,48 @@ const CaptainSignup = () => {
             placeholder="Enter your password"
             required
           />
+          <h3 className="text-lg mb-2">Vehicle information</h3>
+          <div className="flex space-between">
+            <input 
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+              }}
+              className="bg-[#eee] mb-7 outline-none mx-2 rounded px-4 py-2 border w-[50%] text-lg placeholder:text-lg"
+              type="text"
+              placeholder="Vehicle Color"
+              required
+            />
+            <input
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+              }}
+              className="bg-[#eee] mb-7 outline-none rounded mx-2 px-4 py-2 border w-[50%] text-lg placeholder:text-lg"
+              type="text"
+              placeholder="Vehicle Plate Number"
+              required
+            />
+            </div>
+            <div className="flex space-between">
+            <input
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+              }}
+              className="bg-[#eee] mb-7 outline-none rounded mx-2 px-4 py-2 border w-[50%] text-lg placeholder:text-lg"
+              type="text"
+              placeholder="Vehicle Capacity"
+              required
+            />
+            <select name="select" id="" className="g-[#eee] mb-7 mx-2 outline-none rounded px-4 py-2 border w-[50%] text-lg placeholder:text-lg">
+              <option value=""> Select Vehicle Type</option>
+              <option value=""> car</option>
+              <option value=""> MoterCycle</option>
+              <option value=""> Auto</option>
+
+            </select>
+          </div>
           <button
             className="bg-[#212121] text-white mb-3 py-2 px-5 font-semibold rounded-lg w-full"
             type="submit"

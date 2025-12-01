@@ -1,13 +1,7 @@
 import {createContext, useContext, useState} from 'react'
 
 export const CaptainContext = createContext();
-export const useCaptain = () =>{
-    const context = useContext(CaptainContext);
-    if(!context){
-        throw new Error("useCaptain must be used within a CaptainContextProvider");
-    }
-    return context;
-};
+
 const captainContextProvider = ({children}) => {
     const [captain, setCaptain] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -22,10 +16,14 @@ const captainContextProvider = ({children}) => {
         isLoading,
         updateCaptain,
         error,
+        setError,
+        updateCaptain,
+
         
-    }
+    };
+
   return (
-    <CaptainContext.Provider value={{children}}>
+    <CaptainContext.Provider value={{value}}>
       {children}
     </CaptainContext.Provider>
   );
