@@ -5,7 +5,7 @@ import Start from './pages/Start.jsx'
 import UserLogin from './pages/UserLogin.jsx'
 import UserSignup from './pages/UserSignup.jsx'
 import CaptainLogin from './pages/captainLogin.jsx'
-import CaptainSignup from './pages/captainSignup.jsx'
+import CaptainSignup from './pages/CaptainSignup.jsx'
 import UserLogout from './pages/UserLogout.jsx'
 import UserProtectWrappers from './pages/UserProtectWrappers.jsx'
 

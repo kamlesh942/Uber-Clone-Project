@@ -43,10 +43,12 @@ const CaptainSignup = () => {
     
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/captains/signup`, captainData);
     
-    console.log("Signup response:", response.data);
-    setUserData(response.data);
-    setCaptain(response.data);
-    navigate("/captain-dashboard");
+    if(response.status === 201){
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem('token', data.token);
+      navigate('/captain-home');
+    }
 
     setEmail("");
     setPassword("");
