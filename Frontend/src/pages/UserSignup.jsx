@@ -30,7 +30,6 @@ const UserSignup = () => {
       email: email,
       password: password,
     };
-    // console.log("URL =", `${import.meta.env.VITE_BASE_URL}/user/signup`);
 
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUSer);
       if(response.status === 201){
