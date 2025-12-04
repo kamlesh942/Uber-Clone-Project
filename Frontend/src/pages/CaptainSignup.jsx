@@ -39,16 +39,19 @@ const CaptainSignup = () => {
       },
     };
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/captains/register`,
-      captainData
-    );
-
-    if (response.status === 201) {
-      const data = response.data;
-      setCaptain(data.captain);
-      localStorage.setItem("token", data.token);
-      navigate("/captain-home");
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captains/register`,
+        captainData
+      );
+      if (response.status === 201) {
+        const data = response.data;
+        setCaptain(data);
+        localStorage.setItem("token", data.token);
+        navigate("/captain-home");
+      }
+    } catch (err) {
+      console.log("Backend error:", err.response.data);
     }
 
     setEmail("");
@@ -68,11 +71,7 @@ const CaptainSignup = () => {
           src="https://www.svgrepo.com/show/505031/uber-driver.svg"
           alt=""
         />
-        <form
-          onSubmit={(e) => {
-            submitHandler(e);
-          }}
-        >
+        <form onSubmit={submitHandler}>
           <h3 className="text-lg mb-2">What's your Name</h3>
           <div className="flex gap-4">
             <input
@@ -145,7 +144,7 @@ const CaptainSignup = () => {
             <input
               value={vehicleCapacity}
               onChange={(e) => {
-                  setVehicleCapacity(Number(e.target.value))
+                setVehicleCapacity(Number(e.target.value));
               }}
               className="bg-[#eee] mb-7 outline-none rounded mx-2 px-4 py-2 border w-[50%] text-lg placeholder:text-lg"
               type="number"
