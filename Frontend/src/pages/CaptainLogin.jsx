@@ -9,11 +9,10 @@ const CaptainLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [captainData, setCaptainData]  = useState('');
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-      console.log("Updated userData:", captainData);
-    }, [captainData]);
+  // useEffect(() => {
+  //     console.log("Updated userData:", captainData);
+  //   }, [captainData]);
 
     const navigate = useNavigate();
     const { captain, setCaptain } = React.useContext(CaptainContext);
@@ -26,35 +25,12 @@ const CaptainLogin = () => {
     };
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captain)
     if(response.status === 200){
-
       const data = response.data;
       setCaptain(data.captain);
       localStorage.setItem("token", data.token);
 
-      axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
-
-        headers:{
-          Authorization: `Bearer ${data.token}`
-        }
-      }).then((response) => {
-        if(response.status === 200){
-          setCaptainData(response.data);
-          setIsLoading(false);
-
-        }
-      }).catch((error) => {
-        console.log("Error fetching captain profile:", error);  
-        localStorage.removeItem("token");
-        navigate('/captain-login');
-      });
-
-      if(isLoading){
-        return <h1>Loading...</h1>
-      }
-
       navigate("/captain-home");
     }
-
     setEmail("");
     setPassword("");
   };

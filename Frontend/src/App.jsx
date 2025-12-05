@@ -4,7 +4,7 @@ import Home from "./pages/Home.jsx";
 import Start from "./pages/Start.jsx";
 import UserLogin from "./pages/UserLogin.jsx";
 import UserSignup from "./pages/UserSignup.jsx";
-import CaptainLogin from "./pages/captainLogin.jsx";
+import CaptainLogin from "./pages/CaptainLogin.jsx";
 import CaptainSignup from "./pages/CaptainSignup.jsx";
 import UserLogout from "./pages/UserLogout.jsx";
 import UserProtectWrappers from "./pages/UserProtectWrappers.jsx";
