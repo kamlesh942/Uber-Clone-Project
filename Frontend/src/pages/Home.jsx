@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
+import { IoIosArrowDown } from "react-icons/io";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -22,7 +23,7 @@ const Home = () => {
         height: "0",
       });
     }
-  },[panelOpen]);
+  }, [panelOpen]);
   return (
     <div className="w-screen h-screen relative">
       <img
@@ -40,6 +41,9 @@ const Home = () => {
       </div>
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
         <div className="h-[30%] bg-white relative">
+          <h5>
+            <IoIosArrowDown />
+          </h5>
           <h4 className="text-2xl font-semibold">Find a Trip</h4>
           <form
             onSubmit={(e) => {
@@ -73,8 +77,7 @@ const Home = () => {
             />
           </form>
         </div>
-        <div ref={panelRef}
-        className="h-0 bg-red-500"></div>
+        <div ref={panelRef} className="h-0 bg-red-500"></div>
       </div>
     </div>
   );
