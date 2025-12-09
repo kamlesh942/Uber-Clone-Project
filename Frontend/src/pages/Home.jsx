@@ -2,12 +2,14 @@ import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { IoIosArrowDown } from "react-icons/io";
+import LocationSearchPanel from "../components/LocationSearchPanel";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
   const panelRef = useRef(null);
+  const panelCloseRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -17,11 +19,21 @@ const Home = () => {
     if (panelOpen) {
       gsap.to(panelRef.current, {
         height: "70%",
+        padding: 24,
+        opacity:1,
       });
+      gsap.to(panelCloseRef.current, {
+        opacity: 1,
+        padding: 0,
+      })
     } else {
       gsap.to(panelRef.current, {
-        height: "0",
+        height: '0%',
+        // opacity: 0,
       });
+      gsap.to(panelCloseRef.current, {
+        opacity: 0,
+      })
     }
   }, [panelOpen]);
   return (
@@ -41,10 +53,13 @@ const Home = () => {
       </div>
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
         <div className="h-[30%] bg-white relative">
-          <h5>
+          <h5 ref={panelCloseRef} onClick={()=>{
+            setpanelOpen(false);
+          }} 
+          className="absolute opacity-0 top-2 right-6 text-2xl">
             <IoIosArrowDown />
           </h5>
-          <h4 className="text-2xl font-semibold">Find a Trip</h4>
+          <h4 className="text-2xl font-semibold top-9">Find a Trip</h4>
           <form
             onSubmit={(e) => {
               submitHandler(e);
@@ -77,7 +92,9 @@ const Home = () => {
             />
           </form>
         </div>
-        <div ref={panelRef} className="h-0 bg-red-500"></div>
+        <div ref={panelRef} className="h-0 bg-white">
+          <LocationSearchPanel/>
+        </div>
       </div>
     </div>
   );
