@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { IoIosArrowDown } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
+
 import LocationSearchPanel from "../components/LocationSearchPanel";
 
 const Home = () => {
@@ -37,7 +39,7 @@ const Home = () => {
     }
   }, [panelOpen]);
   return (
-    <div className="w-screen h-screen relative">
+    <div className="w-screen h-screen relative overflow-hidden">
       <img
         className="w-20 absolute left-5 top-5"
         src="https://brandeps.com/logo-download/U/Uber-logo-02.png"
@@ -95,6 +97,36 @@ const Home = () => {
         <div ref={panelRef} className="h-0 bg-white">
           <LocationSearchPanel/>
         </div>
+      </div>
+      <div className="fixed z-10 w-full bottom-0 bg-white px-3 py-6">
+              <h3 className="text-2xl font-semibold mb-5">Choose a Vehicle</h3>
+              <div className="flex border-2 border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
+                <img className="h-12" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFAeFmvyzZoJz2iCdXy19QhPSXOmzg-j25uQ&s" alt="Car Image" />
+                <div className="ml-3 w-1/2 px-5" >
+                  <h4 className="flex font-medium text-base">UberGo <span className="flex ml-1 gap-1"><FaUser /> 4 </span></h4>
+                  <h5 className="font-medium text-sm">2 mins away</h5>
+                  <p className="font-normal text-xs text-gray-600">Affordable, compact rides</p>
+                </div>
+                <h2 className="text-2xl font-semibold">₹193.20</h2>
+              </div>
+              <div className="flex border-2 border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
+                <img className="h-12" src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=368/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy8yYzdmYTE5NC1jOTU0LTQ5YjItOWM2ZC1hM2I4NjAxMzcwZjUucG5n" alt="motercycle Image" />
+                <div className="ml-3 w-1/2 px-5" >
+                  <h4 className="flex font-medium text-base">UberGo <span className="flex ml-1 gap-1"><FaUser /> 1 </span></h4>
+                  <h5 className="font-medium text-sm">3 mins away</h5>
+                  <p className="font-normal text-xs text-gray-600">Affordable, motor cycle rides</p>
+                </div>
+                <h2 className="text-2xl font-semibold">₹65.20</h2>
+              </div>
+              <div className="flex border-2 border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
+                <img className="h-12" src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=368/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy8xZGRiOGM1Ni0wMjA0LTRjZTQtODFjZS01NmExMWEwN2ZlOTgucG5n" alt="auto Image" />
+                <div className="ml-3 w-1/2 px-5" >
+                  <h4 className="flex font-medium text-base">UberGo <span className="flex ml-1 gap-1"><FaUser /> 3 </span></h4>
+                  <h5 className="font-medium text-sm">4 mins away</h5>
+                  <p className="font-normal text-xs text-gray-600">Affordable, auto rides</p>
+                </div>
+                <h2 className="text-2xl font-semibold">₹183.20</h2>
+              </div>
       </div>
     </div>
   );
