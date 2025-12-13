@@ -13,8 +13,11 @@ const LocationSearchPanel = () => {
   return (
     <div>
     {
-      locations.map(function(elem){
-        return <div className="flex gap-4  border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-4 justify-start">
+      locations.map(function(elem, idx){
+        return <div key = {idx} onClick={()=>{
+          props.setVehiclePanel(true)
+          props.setpanelOpen(false)
+        }} className="flex gap-4  border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-4 justify-start">
         <h2 className=" bg-[#eee] flex items-center justify-center h-5 w-10 rounded-full">
              <FaLocationDot />
         </h2>

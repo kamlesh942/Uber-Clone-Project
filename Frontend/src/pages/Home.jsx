@@ -11,7 +11,9 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
   const panelRef = useRef(null);
+  const vehiclePanelRef = useRef(null)
   const panelCloseRef = useRef(null);
+  const [vehiclePanel, setVehiclePanel] = useState(false)
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -38,6 +40,19 @@ const Home = () => {
       })
     }
   }, [panelOpen]);
+
+  useGSAP(function(){
+    if(vehiclePanel){
+      gsap.to(vehiclePanelRef.current, {
+        transform : 'translateY(0)'
+      })
+    }else{
+      gsap.to(vehiclePanelRef.current, {
+        transform : 'translateY(100%)'
+      })
+    }
+  }, [vehiclePanel])
+
   return (
     <div className="w-screen h-screen relative overflow-hidden">
       <img
@@ -45,7 +60,9 @@ const Home = () => {
         src="https://brandeps.com/logo-download/U/Uber-logo-02.png"
         alt="Uber-Logo"
       />
-      <div className="h-screen w-screen">
+      <div onClick={()=>{
+
+      }} className="h-screen w-screen">
         {/* for temporary purpose */}
         <img
           className="h-full w-full"
@@ -95,10 +112,16 @@ const Home = () => {
           </form>
         </div>
         <div ref={panelRef} className="h-0 bg-white">
-          <LocationSearchPanel/>
+          <LocationSearchPanel setpanelOpen={setpanelOpen}  setVehiclePanel = {setVehiclePanel} />
         </div>
       </div>
-      <div className="fixed z-10 w-full translate-y-full bottom-0 bg-white px-3 py-6">
+      <div ref= {vehiclePanelRef} className="fixed z-10 w-full translate-y-full bottom-0 bg-white px-3 py-6">
+        <h5 ref={panelCloseRef} onClick={()=>{
+            setVehiclePanel(false);
+          }} 
+          className="absolute opacity-0 top-2 right-6 text-2xl">
+            <IoIosArrowDown />
+          </h5>
               <h3 className="text-2xl font-semibold mb-5">Choose a Vehicle</h3>
               <div className="flex border-2 active:border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
                 <img className="h-12" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFAeFmvyzZoJz2iCdXy19QhPSXOmzg-j25uQ&s" alt="Car Image" />
