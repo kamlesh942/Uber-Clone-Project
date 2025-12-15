@@ -2,7 +2,7 @@ import React from "react";
 import { FaLocationDot } from "react-icons/fa6";
 
 
-const LocationSearchPanel = () => {
+const LocationSearchPanel = (props) => {
   // sample array for location
   const locations = [
     "Vaibhav cafe second floor Kamlesh Coding Plateform Satna",
