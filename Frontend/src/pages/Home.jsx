@@ -138,7 +138,9 @@ const Home = () => {
           <div ref= {confirmRidePanelRef} className="fixed z-10 w-full translate-y-full bottom-0 bg-white px-3 py-6">
               <ConfirmRide setConfirmRidePanel= {setConfirmRidePanel} />
           </div>
-
+           <div className="fixed z-10 w-full translate-y-full bottom-0 bg-white px-3 py-6">
+              
+          </div>
     </div>
   );
 };
