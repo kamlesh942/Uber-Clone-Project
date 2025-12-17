@@ -9,7 +9,7 @@ const LookingForDriver = (props) => {
     <div>
       <h5
         onClick={() => {
-          props.setVehiclePanel(false);
+          props.setVehicleFound(false);
         }}
         className="absolute top-6 right-6 text-2xl"
       >
