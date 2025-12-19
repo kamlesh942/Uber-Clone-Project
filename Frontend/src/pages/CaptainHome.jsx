@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const CaptainHome = () => {
   return (
     <div className="h-screen">
-        <div className='fixed flex items-center justify-between p-2'>
+        <div className=' fixed p-3 top-0 flex items-center justify-between w-screen'>
           <img
           className="w-16 mb-7"
           src="https://www.svgrepo.com/show/505031/uber-driver.svg"
@@ -47,6 +47,13 @@ const CaptainHome = () => {
                     <p className="text-sm">Kankariys Talab, Satna</p>
                   </div>
                 </div> */}
+                <div className="flex items-center gap-5 p-3 border-b-2">
+                  <FaLocationDot />
+                  <div>
+                    <h3 className="text-lg font-medium">562/11-A</h3>
+                    <p className="text-sm">Kankariys Talab, Satna</p>
+                  </div>
+                </div>
                 <div className="flex items-center gap-5 p-3 border-b-2">
                   <FaLocationDot />
                   <div>
