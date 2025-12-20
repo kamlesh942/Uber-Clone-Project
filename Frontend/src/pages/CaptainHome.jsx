@@ -24,6 +24,11 @@ const CaptainHome = () => {
           src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
           alt="Uber-map-img"
         />
+        <img
+          className="h-full w-full object-cover"
+          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
+          alt="Uber-map-img"
+        />
       </div>
       <div className="h-1/2 p-4">
        <div className="flex gap-2 justify-between flex-col items-center">
