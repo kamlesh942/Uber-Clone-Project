@@ -2,6 +2,7 @@ import React from "react";
 import { IoIosLogOut } from "react-icons/io";
 import { Link } from "react-router-dom";
 import CaptainDetails from "../components/CaptainDetails";
+import RidePopUp from "../components/RidePopUp";
 
 const CaptainHome = () => {
   return (
@@ -30,7 +31,7 @@ const CaptainHome = () => {
         <CaptainDetails />
       </div>
       <div className="fixed z-10 w-full translate-y-full bottom-0 bg-white px-3 py-6">
-        
+        <RidePopUp />
       </div>
     </div>
   );
