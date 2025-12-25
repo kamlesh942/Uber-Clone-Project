@@ -1,20 +1,13 @@
 import React from 'react'
-import { IoIosArrowDown } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { HiCurrencyRupee } from "react-icons/hi2";
+import { Link } from 'react-router-dom';
 
 
-const ConfirmRidePopUp = () => {
+const ConfirmRidePopUp = (props) => {
   return (
    <div >
-   
-                 <h5 onClick={()=>{
-                             props.setConfirmRidePopUpPanel(false);
-                             }} 
-                             className="absolute top-6 right-6 text-2xl">
-                             <IoIosArrowDown />
-                 </h5>
-                 <h3 className="text-2xl font-semibold mb-5">New Ride Available !</h3>
+                 <h3 className="text-2xl font-semibold mb-5">Confirm this Ride to Confirm</h3>
    
                  <div className='flex items-center justify-between bg-yellow-400 rounded-xl p-2'>
                    <div className="flex items-center gap-4 ">
@@ -48,16 +41,13 @@ const ConfirmRidePopUp = () => {
                                </div>
                              </div>
                        </div>
-                       <button onClick = {
-                         ()=>{
-                          
-                         }
-                       } className='w-full mt-8 bg-green-600 text-white font-semibold p-2 rounded-lg '>Confirm</button>
+                       <Link to= '/captain-riding' className='w-full flex mt-8 bg-green-600 justify-center text-white font-semibold p-2 rounded-lg '>Confirm</Link>
                         <button onClick = {
                          ()=>{
+                           props.setConfirmRidePopUpPanel(false);
                            props.setRidePopUpPanel(false);
                          }
-                       } className='w-full mt-4 bg-gray-400 text-white font-semibold p-2 rounded-lg '>Ignore</button>
+                       } className='w-full mt-4 bg-red-600 text-white font-semibold p-2 rounded-lg '>Cancel</button>
                 
                  </div>
        </div>
