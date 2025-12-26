@@ -24,9 +24,14 @@ const CaptainRiding = () => {
           src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
           alt="Uber-map-img"
         />
+        <img
+          className="h-full w-full object-cover"
+          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
+          alt="Uber-map-img"
+        />
       </div>
       <div className="h-2/5 p-6">
-        {/* <CaptainDetails /> */}
+        <CaptainDetails />
       </div>
       
     </div>
