@@ -6,13 +6,14 @@ import RidePopUp from "../components/RidePopUp";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
+import FinishRide from "../components/FinishRide";
 
 
 const CaptainHome = () => {
   const [ridePopUpPanel, setRidePopUpPanel] = useState(true);
-  const [ConfirmRidePopUpPanel, setConfirmRidePopUpPanel] = useState(false);  
+  const [ConfirmRidePopUpPanel, setConfirmRidePopUpPanel] = useState(false);
   const ridePopUpPanelRef = useRef(null);
-  const ConfirmRidePopUpPanelRef = useRef(null);  
+  const ConfirmRidePopUpPanelRef = useRef(null); 
 
    useGSAP(function(){
     if(ridePopUpPanel){
@@ -42,6 +43,7 @@ const CaptainHome = () => {
     }
   }, [ConfirmRidePopUpPanel])
 
+ 
   return (
     <div className="h-screen">
       <div className=" fixed p-8 top-0 flex items-center justify-between w-screen">
@@ -74,6 +76,7 @@ const CaptainHome = () => {
       <div ref = {ConfirmRidePopUpPanelRef} className="fixed z-10 w-full translate-y-full bottom-0 bg-white px-3 py-6">
         <ConfirmRidePopUp setConfirmRidePopUpPanel= {setConfirmRidePopUpPanel} setRidePopUpPanel={setRidePopUpPanel} />
       </div>
+     
     </div>
   );
 };
