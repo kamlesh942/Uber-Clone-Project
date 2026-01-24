@@ -1,14 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authMiddleware = require('../middlewares/auth.middlewares');
-const mapController = require('../controllers/maps.controller');
-const { query } = require('express-validator');
+const authMiddleware = require("../middlewares/auth.middlewares");
+const mapController = require("../controllers/maps.controller");
+const { query } = require("express-validator");
 
 router.get(
-  '/get-coordinates',
-  query('address').isString().isLength({ min: 3 }),
+  "/get-coordinates",
+  query("address").isString().isLength({ min: 3 }),
   authMiddleware.authUser,
-  mapController.getCoordinates
+  mapController.getCoordinates,
 );
+router.get("/get-distance-time",
+  query("origin").isString().isLength({ min: 3 }),
+  query("destination").isString().isLength({ min: 3 }),
+  authMiddleware.authUser,
+  mapController.getDistanceAndTime
+)
 
 module.exports = router;
