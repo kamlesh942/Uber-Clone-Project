@@ -8,7 +8,7 @@ router.get(
   "/get-coordinates",
   query("address").isString().isLength({ min: 3 }),
   authMiddleware.authUser,
-  mapController.getCoordinates,
+  mapController.getAddressCoordinates,
 );
 router.get("/get-distance-time",
   query("origin").isString().isLength({ min: 3 }),

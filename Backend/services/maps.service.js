@@ -1,73 +1,48 @@
-const axios = require('axios');
+const axios = require("axios");
 
 module.exports.getAddressCoordinates = async (address) => {
-    const apiKey = process.env.GOOGLE_MAPS_API;
-    const encodedAddress = encodeURIComponent(address);
-
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${apiKey}`;
-    console.log(encodedAddress);
-    try {
-        const response = await axios.get(url);
-
-        if (response.data.status === 'OK') {
-            const location = response.data.results[0].geometry.location;
-            return {
-                lat: location.lat,
-                lng: location.lng
-            };
-        } else {
-            throw new Error('Unable to fetch coordinates');
-        }
-    } catch (error) {
-        console.error(error.message);
-        throw error;
+    if (!address) {
+        throw new Error("Address is required");
     }
+
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+
+    const response = await axios.get(url, {
+        headers: {
+            "User-Agent": "UberCloneApp/1.0 (dev@uberclone.local)"
+        }
+    });
+
+    if (!response.data || response.data.length === 0) {
+        throw new Error("Location not found");
+    }
+
+    return {
+        lat: Number(response.data[0].lat),
+        lng: Number(response.data[0].lon)
+    };
 };
 
-// module.exports.getDistanceAndTime = async (origin, destination) => {
-//     if(!origin || !destination){
-//         throw new Error('Origin and destination are required');
-//     }
-
-//     const apiKey = process.env.GOOGLE_MAPS_API;
-//     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&key=${apiKey}`;
-//     try {
-//         const response = await axios.get(url);
-//         if(response.data.status === 'OK'){
-//             if(response.data.rows[0].elements[0].status === 'ZERO_RESULTS'){
-//                 throw new Error('No route could be found between the origin and destination');
-//             }
-//             return response.data.rows[0].elements[0];
-//         }
-//         else{
-//             throw new Error('Unable to fetch distance and time');
-//         }
-//     }
-//     catch(err){
-//         console.log(err);
-//         throw err;
-//     }
-// }
-
-
 module.exports.getDistanceAndTime = async (origin, destination) => {
-    const apiKey = process.env.GOOGLE_MAPS_API;
+    if (
+        !origin?.lat || !origin?.lng ||
+        !destination?.lat || !destination?.lng
+    ) {
+        throw new Error("Invalid coordinates passed to OSRM");
+    }
 
-    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&key=${apiKey}`;
+    const url = `https://router.project-osrm.org/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=false`;
 
     const response = await axios.get(url);
-    console.log(response.data);
 
-    if (response.data.status === 'OK') {
-        const leg = response.data.routes[0].legs[0];
-
-        return {
-            distance: leg.distance.text,
-            duration: leg.duration.text,
-            distanceValue: leg.distance.value,
-            durationValue: leg.duration.value
-        };
-    } else {
-        throw new Error('Unable to fetch distance and time');
+    if (!response.data.routes || response.data.routes.length === 0) {
+        throw new Error("Route not found");
     }
+
+    const route = response.data.routes[0];
+
+    return {
+        distance_km: (route.distance / 1000).toFixed(2),
+        duration_min: (route.duration / 60).toFixed(1)
+    };
 };
