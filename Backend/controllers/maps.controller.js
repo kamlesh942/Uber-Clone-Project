@@ -1,6 +1,6 @@
 const mapService = require('../services/maps.service');
 
-module.exports.getAddressCoordinates = async (req, res) => {
+module.exports.getAddressCoordinates = async (req, res, next) => {
     const { address } = req.query;
 
     if (!address) {
@@ -15,7 +15,7 @@ module.exports.getAddressCoordinates = async (req, res) => {
     }
 };
 
-module.exports.getDistanceAndTime = async (req, res) => {
+module.exports.getDistanceAndTime = async (req, res, next) => {
     try {
         const { origin, destination } = req.query;
 
@@ -38,3 +38,22 @@ module.exports.getDistanceAndTime = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
+
+module.exports.getAutoCompleteSuggestions = async (req, res, next) => {
+   try{
+
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        return res.status(400).json({ errors: error.array() });
+    }
+    const { input } = req.query;
+    const suggestions = await mapService.getAutoCompleteSuggestions(input);
+
+    res.status(200).json(suggestions);
+
+   }catch(error){
+    console.error(error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+   }
+
+}

@@ -46,3 +46,27 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
         duration_min: (route.duration / 60).toFixed(1)
     };
 };
+
+module.exports.getAutoCompleteSuggestions = async (input) => {
+
+    if(!input) {
+        throw new Error("Query is required");
+    }
+
+    const apikey = process.env.PLACES_API_KEY;
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apikey}`;
+    try{
+        const response = await axios.get(url);
+        if(response.data.status !== "OK"){
+            return response.data.predictions;
+        }else{
+            throw new Error("Error fetching suggestions");
+        }
+    }catch(error){
+
+        console.error(error.message);
+        throw error;
+    }
+
+
+}
