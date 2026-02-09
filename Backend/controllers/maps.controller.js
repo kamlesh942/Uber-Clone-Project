@@ -39,21 +39,38 @@ module.exports.getDistanceAndTime = async (req, res, next) => {
     }
 };
 
+// 
+
+
+const { validationResult } = require("express-validator");
+
 module.exports.getAutoCompleteSuggestions = async (req, res, next) => {
-   try{
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-    const error = validationResult(req);
-    if (!error.isEmpty()) {
-        return res.status(400).json({ errors: error.array() });
+        const { input } = req.query;
+
+        if (!input || input.trim().length < 2) {
+            return res.status(400).json({
+                message: "Input must be at least 2 characters"
+            });
+        }
+
+        const suggestions = await mapService.getAutoCompleteSuggestions(input);
+
+        return res.status(200).json({
+            success: true,
+            suggestions
+        });
+
+    } catch (error) {
+        console.error("Autocomplete Error:", error);
+        return res.status(500).json({
+            message: "Internal Server Error"
+        });
     }
-    const { input } = req.query;
-    const suggestions = await mapService.getAutoCompleteSuggestions(input);
+};
 
-    res.status(200).json(suggestions);
-
-   }catch(error){
-    console.error(error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
-   }
-
-}

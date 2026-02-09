@@ -47,26 +47,44 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
     };
 };
 
-module.exports.getAutoCompleteSuggestions = async (input) => {
 
-    if(!input) {
+module.exports.getAutoCompleteSuggestions = async (input) => {
+    if (!input) {
         throw new Error("Query is required");
     }
 
-    const apikey = process.env.PLACES_API_KEY;
-    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apikey}`;
-    try{
-        const response = await axios.get(url);
-        if(response.data.status !== "OK"){
-            return response.data.predictions;
-        }else{
-            throw new Error("Error fetching suggestions");
-        }
-    }catch(error){
+    const url = `https://nominatim.openstreetmap.org/search?` +
+        `q=${encodeURIComponent(input)}` +
+        `&format=json` +
+        `&addressdetails=1` +
+        `&limit=5`;
 
-        console.error(error.message);
+    try {
+        const response = await axios.get(url, {
+            headers: {
+                "User-Agent": "UberCloneApp/1.0 (dev@uberclone.local)"
+            }
+        });
+
+        // 🔁 Convert OSM → Google Places format
+        const predictions = response.data.map(place => ({
+            description: place.display_name,
+            place_id: place.place_id,
+            structured_formatting: {
+                main_text: place.name || place.display_name.split(",")[0],
+                secondary_text: place.display_name
+                    .split(",")
+                    .slice(1)
+                    .join(",")
+                    .trim()
+            }
+        }));
+
+        return predictions;
+
+    } catch (error) {
+        console.error("OSM Autocomplete Error:", error.message);
         throw error;
     }
+};
 
-
-}
