@@ -25,13 +25,16 @@ module.exports.getAddressCoordinates = async (address) => {
 
 module.exports.getDistanceAndTime = async (origin, destination) => {
     if (
-        !origin?.lat || !origin?.lng ||
-        !destination?.lat || !destination?.lng
+        typeof origin?.lat !== "number" ||
+        typeof origin?.lng !== "number" ||
+        typeof destination?.lat !== "number" ||
+        typeof destination?.lng !== "number"
     ) {
         throw new Error("Invalid coordinates passed to OSRM");
     }
 
-    const url = `https://router.project-osrm.org/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=false`;
+    const url = `https://router.project-osrm.org/route/v1/driving/` +
+        `${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=false`;
 
     const response = await axios.get(url);
 
@@ -42,10 +45,11 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
     const route = response.data.routes[0];
 
     return {
-        distance_km: (route.distance / 1000).toFixed(2),
-        duration_min: (route.duration / 60).toFixed(1)
+        distance: Number(route.distance),   // meters
+        duration: Number(route.duration)    // seconds
     };
 };
+
 
 
 module.exports.getAutoCompleteSuggestions = async (input) => {
