@@ -24,8 +24,9 @@ const Home = () => {
   const [vehicleFound, setVehicleFound] = useState(false);
   const [waitingForDriver, setWaitingForDriver] = useState(false);
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
-  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
-  const [activeField, setActiveField] = useState(null);
+const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+const [activeField, setActiveField] = useState(null);
+
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -69,6 +70,7 @@ const Home = () => {
     e.preventDefault();
     console.log("form submitted");
   };
+
   useGSAP(() => {
     if (panelOpen) {
       gsap.to(panelRef.current, {
