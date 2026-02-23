@@ -6,13 +6,13 @@ import axios from "axios";
 
 
 
-const LocationSearchPanel = ({suggetions, setVehiclePanel, setpanelOpen, setPickup, activeField, setDestination }) => {
-  const handleSuggetionsClick = (suggetion) =>{
+const LocationSearchPanel = ({suggestions, setVehiclePanel, setpanelOpen, setPickup, activeField, setDestination }) => {
+  const handleSuggestionsClick = (suggestion) =>{
     if(activeField === "pickup"){
-      setPickup(suggetion);
+      setPickup(suggestion);
     }
     else if(activeField === "destination"){
-      setDestination(suggetion);
+      setDestination(suggestion);
     }
     // setVehiclePanel(true)
     // setpanelOpen(false)
@@ -21,9 +21,9 @@ const LocationSearchPanel = ({suggetions, setVehiclePanel, setpanelOpen, setPick
   return (
     <div>
     {
-      suggetions.map(function(elem, idx){
+      suggestions?.map(function(elem, idx){
          <div key = {idx} onClick={()=>{
-          handleSuggetionsClick(elem)
+          handleSuggestionsClick(elem)
           
         }} className="flex gap-4  border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-4 justify-start">
         <h2 className=" bg-[#eee] flex items-center justify-center h-5 w-10 rounded-full">

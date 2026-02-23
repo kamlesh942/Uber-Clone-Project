@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
+import axios from "axios";
 import { gsap } from "gsap";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
@@ -8,6 +9,7 @@ import LocationSearchPanel from "../components/LocationSearchPanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
+
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -24,21 +26,21 @@ const Home = () => {
   const [vehicleFound, setVehicleFound] = useState(false);
   const [waitingForDriver, setWaitingForDriver] = useState(false);
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
-const [destinationSuggestions, setDestinationSuggestions] = useState([]);
-const [activeField, setActiveField] = useState(null);
-
+  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+  const [activeField, setActiveField] = useState(null);
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/maps/get-suggestions`,
-        { params: { input: e.target.value },
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem("token")}`
-        }
-      }
-     );
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
       setPickupSuggestions(response.data);
       // console.log(response.data);
     } catch (err) {
@@ -51,12 +53,14 @@ const [activeField, setActiveField] = useState(null);
     setDestination(e.target.value);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/maps/get-suggestions`,
-        { params: { input: e.target.value },
-       
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem("token")}`
-        } }
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { input: e.target.value },
+
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
       );
       setDestinationSuggestions(response.data);
       // console.log(response.data);
@@ -65,6 +69,8 @@ const [activeField, setActiveField] = useState(null);
       throw err;
     }
   };
+  console.log("Pickup suggestions:", pickupSuggestions);
+  console.log("Destination suggestions:", destinationSuggestions);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -190,7 +196,7 @@ const [activeField, setActiveField] = useState(null);
             }}
           >
             <div className="line absolute h-16 w-1 top-[45%] left-10 bg-gray-900 rounded-full"></div>
-            <input
+            {/* <input
               onClick={() => {
                 setpanelOpen(true);
               }}
@@ -201,8 +207,19 @@ const [activeField, setActiveField] = useState(null);
               className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-5"
               type="text"
               placeholder="Add a Pick-up Location"
-            />
+            /> */}
             <input
+              onClick={() => {
+                setpanelOpen(true);
+                setActiveField("pickup");
+              }}
+              value={pickup}
+              onChange={handlePickupChange}
+              className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-5"
+              type="text"
+              placeholder="Add a Pick-up Location"
+            />
+            {/* <input
               onClick={() => {
                 setpanelOpen(true);
               }}
@@ -213,11 +230,34 @@ const [activeField, setActiveField] = useState(null);
               className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-5"
               type="text"
               placeholder="Enter Your Destinatio"
+            /> */}
+            <input
+              onClick={() => {
+                setpanelOpen(true);
+                setActiveField("destination");
+              }}
+              value={destination}
+              onChange={handleDestinationChange}
+              className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-5"
+              type="text"
+              placeholder="Enter Your Destination"
             />
           </form>
         </div>
         <div ref={panelRef} className="h-0 bg-white">
+          {/* <LocationSearchPanel
+            setpanelOpen={setpanelOpen}
+            setVehiclePanel={setVehiclePanel}
+          /> */}
           <LocationSearchPanel
+            suggetions={
+              activeField === "pickup"
+                ? pickupSuggestions
+                : destinationSuggestions
+            }
+            setPickup={setPickup}
+            setDestination={setDestination}
+            activeField={activeField}
             setpanelOpen={setpanelOpen}
             setVehiclePanel={setVehiclePanel}
           />
