@@ -4,40 +4,47 @@ import { FaLocationDot } from "react-icons/fa6";
 // import { set } from "mongoose";
 import axios from "axios";
 
+const LocationSearchPanel = ({
+  suggestions,
+  setVehiclePanel,
+  setpanelOpen,
+  setPickup,
+  activeField,
+  setDestination,
+}) => {
+  const handleSuggestionsClick = (suggestion) => {
+    const label = typeof suggestion === "string" ? suggestion : suggestion.description || suggestion.display_name;
 
-
-const LocationSearchPanel = ({suggestions, setVehiclePanel, setpanelOpen, setPickup, activeField, setDestination }) => {
-  const handleSuggestionsClick = (suggestion) =>{
-    if(activeField === "pickup"){
-      setPickup(suggestion);
+    if (activeField === "pickup") {
+      setPickup(label);
+    } else if (activeField === "destination") {
+      setDestination(label);
     }
-    else if(activeField === "destination"){
-      setDestination(suggestion);
-    }
-    // setVehiclePanel(true)
     // setpanelOpen(false)
-  }
+    // setVehiclePanel(true)
+
+  };
 
   return (
     <div>
-    {
-      suggestions?.map(function(elem, idx){
-         <div key = {idx} onClick={()=>{
-          handleSuggestionsClick(elem)
-          
-        }} className="flex gap-4  border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-4 justify-start">
-        <h2 className=" bg-[#eee] flex items-center justify-center h-5 w-10 rounded-full">
-             <FaLocationDot />
-        </h2>
-        <h4 className="font-medium">{elem}</h4>
-      </div>
-      })
-    }
-    </div>
-      
-  )
-   
   
+      {Array.isArray(suggestions) &&
+        suggestions.map((elem, idx) => (
+          <div
+            key={idx}
+            onClick={() => handleSuggestionsClick(elem)}
+            className="flex gap-4 border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-4 justify-start"
+          >
+            <h2 className="bg-[#eee] flex items-center justify-center h-5 w-10 rounded-full">
+              <FaLocationDot />
+            </h2>
+            <h4 className="font-medium">
+              {typeof elem === "string" ? elem : elem.description || elem.display_name}
+            </h4>
+          </div>
+        ))}
+    </div>
+  );
 };
 
 export default LocationSearchPanel;
