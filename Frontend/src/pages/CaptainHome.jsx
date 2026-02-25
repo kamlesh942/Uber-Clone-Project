@@ -1,4 +1,5 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useContext} from "react";
+// import { CaptainContext} from "../context/captainContext";
 import { IoIosLogOut } from "react-icons/io";
 import { Link } from "react-router-dom";
 import CaptainDetails from "../components/CaptainDetails";

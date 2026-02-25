@@ -1,17 +1,20 @@
-import React from 'react'
+import React , {useContext} from 'react'
 import { IoMdTimer } from "react-icons/io";
 import { BsSpeedometer } from "react-icons/bs";
 import { MdOutlineStickyNote2 } from "react-icons/md";
+import { CaptainContext } from '../context/captainContext';
 
 
 const CaptainDetails = () => {
+
+  const {captain} = useContext(CaptainContext);
   return (
     <div>
 
         <div className='flex items-center justify-between'>
           <div className='flex items-center justify-start gap-3'>
             <img className='h-10 w-10 rounded-full object-cover' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCCVY3pMASPibzeIqrB8TGhWOZwyIKJokYlw&s" alt="Captain image" />
-            <h4 className='text-lg font-medium'>Kamlesh Rajak</h4>
+            <h4 className='text-lg font-medium'>{(captain?.fullname.firstname +"  " + captain?.fullname.lastname).toUpperCase()}</h4>
           </div>
           <div>
             <h4 className='text-xl font-bold'>₹193.20</h4>

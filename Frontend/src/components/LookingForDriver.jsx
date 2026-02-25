@@ -5,15 +5,21 @@ import { HiCurrencyRupee } from "react-icons/hi2";
 
 
 const LookingForDriver = (props) => {
+  if(!props.fare || !props.vehicleType) {
+    return (
+      <div className="text-center p-4"> 
+        Loading ride details...
+      </div>
+    )
+  }
   return (
     <div>
       <h5
         onClick={() => {
-          props.setVehicleFound(false);
-        }}
+          props.setVehicleFound(false);}}
         className="absolute top-6 right-6 text-2xl"
       >
-        <IoIosArrowDown />
+      <IoIosArrowDown />
       </h5>
       <h3 className="text-2xl font-semibold mb-5">Looking For a Driver</h3>
       <div className="flex gap-2 justify-between flex-col items-center">
@@ -27,21 +33,21 @@ const LookingForDriver = (props) => {
             <FaLocationDot />
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm">Kankariys Talab, Satna</p>
+              <p className="text-sm">{props.pickup}</p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
             <FaLocationDot />
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm">Kankariys Talab, Satna</p>
+              <p className="text-sm">{props.destination}</p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
             <HiCurrencyRupee />
 
             <div>
-              <h3 className="text-lg font-medium">₹193.20</h3>
+              <h3 className="text-lg font-medium">₹{props.fare[props.vehicleType]}</h3>
               <p className="text-sm">Cash Cash</p>
             </div>
           </div>

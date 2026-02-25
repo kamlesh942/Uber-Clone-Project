@@ -4,6 +4,14 @@ import { FaUser } from "react-icons/fa";
 import ConfirmRide from './ConfirmRide';
 
 const VehiclePanel = (props) => {
+   if (!props.fare) {
+    return (
+      <div className="p-4 text-center text-gray-600">
+        Calculating fare...
+      </div>
+    );
+  }
+  
   return (
        <div>
         <h5 onClick={()=>{
@@ -14,6 +22,7 @@ const VehiclePanel = (props) => {
         </h5>
               <h3 className="text-2xl font-semibold mb-5">Choose a Vehicle</h3>
               <div onClick={()=>{
+                props.selectVehicle("car")          
                 props.setConfirmRidePanel(true)
                 // props.setVehiclePanel(false)
               }} className="flex border-2 active:border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
@@ -23,9 +32,10 @@ const VehiclePanel = (props) => {
                   <h5 className="font-medium text-sm">2 mins away</h5>
                   <p className="font-normal text-xs text-gray-600">Affordable, compact rides</p>
                 </div>
-                <h2 className="text-2xl font-semibold">₹193.20</h2>
+                <h2 className="text-2xl font-semibold">₹{props.fare.car}</h2>
               </div>
               <div onClick={()=>{
+                props.selectVehicle("motorcycle")
                 props.setConfirmRidePanel(true)
                 // props.setVehiclePanel(false)
               }} className="flex border-2 active:border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
@@ -35,9 +45,10 @@ const VehiclePanel = (props) => {
                   <h5 className="font-medium text-sm">3 mins away</h5>
                   <p className="font-normal text-xs text-gray-600">Affordable, motor cycle rides</p>
                 </div>
-                <h2 className="text-2xl font-semibold">₹65.20</h2>
+                <h2 className="text-2xl font-semibold">₹{props.fare.motorcycle}</h2>
               </div>
               <div onClick={()=>{
+                props.selectVehicle("auto")
                 props.setConfirmRidePanel(true)
                 // props.setVehiclePanel(false)
               }} className="flex border-2 active:border-black rounded-xl mb-2 w-full p-2 items-center justify-center">
@@ -47,7 +58,7 @@ const VehiclePanel = (props) => {
                   <h5 className="font-medium text-sm">4 mins away</h5>
                   <p className="font-normal text-xs text-gray-600">Affordable, auto rides</p>
                 </div>
-                <h2 className="text-2xl font-semibold">₹183.20</h2>
+                <h2 className="text-2xl font-semibold">₹{props.fare.auto}</h2>
               </div>
       </div>
   )
