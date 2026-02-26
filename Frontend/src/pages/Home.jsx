@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useGSAP } from "@gsap/react";
 import axios from "axios";
 import { gsap } from "gsap";
@@ -9,6 +9,8 @@ import LocationSearchPanel from "../components/LocationSearchPanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
+import { SocketContext } from "../context/socketContext";
+import { UserContext } from "../context/userContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -30,9 +32,19 @@ const Home = () => {
   const [fare, setFare] = useState(null);
   const [vehicleType, setVehicleType] = useState(null);
 
+  const { socket } = useContext(SocketContext);  
+  const {user} = useContext(UserContext);
   useEffect(() => {
-    console.log("vehicleFound:", vehicleFound);
-  }, [vehicleFound]);
+  if (!user || !user._id) return;
+
+  console.log("User in Home component:", user);
+
+  socket.emit("join", { userType: "user", userId: user._id });
+}, [user]);
+
+  // useEffect(() => {
+  //   console.log("vehicleFound:", vehicleFound);
+  // }, [vehicleFound]);
 
   const normalizeSuggestions = (data) => {
     if (Array.isArray(data)) return data;
