@@ -1,4 +1,5 @@
 const axios = require("axios");
+const captainModel = require("../models/captain.model");
 
 module.exports.getAddressCoordinates = async (address) => {
     if (!address) {
@@ -90,5 +91,16 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
         console.error("OSM Autocomplete Error:", error.message);
         throw error;
     }
+};
+
+module.exports.getCaptainsinTheRadius = async (lng, lat, radius) => {
+    const captains = await captainModel.find({
+        location: {
+            $geoWithin: {
+                $centerSphere: [[lng, lat], radius / 6378.1] // radius in radians
+            }
+        }
+    });
+    return captains;
 };
 
