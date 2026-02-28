@@ -10,9 +10,11 @@ function initializeSocket(server) {
       origin: "*",
       methods: ["GET", "POST"],
     },
-  });
+  })
 
   io.on("connection", (socket) => {
+    console.log(`A client connected: ${socket.id}`);
+
     socket.on("join", async (data) => {
       const { userId, userType } = data;
       console.log(
@@ -28,9 +30,25 @@ function initializeSocket(server) {
         });
       }
     });
+
+    socket.on('update-location-catain', async (data) => {
+      const { userId, location } = data;
+      if (!userId || !location.ltd || !location.lng) {
+        return socket.emit("error", "Invalid location data");
+      }
+      await captainModel.findByIdAndUpdate(userId, {
+        location :{
+          ltd: location.ltd,
+          lng: location.lng
+        }
+      });
+    });
+
     socket.on("disconnect", () => {
       console.log(`A client disconnected: ${socket.id}`);
     });
+
+    
   });
 }
 
