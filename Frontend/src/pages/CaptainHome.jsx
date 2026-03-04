@@ -21,39 +21,48 @@ const CaptainHome = () => {
   const { socket } = useContext(SocketContext);
   const { captain } = useContext(CaptainContext);
 
-  useEffect(() => {
-    if (socket && captain?._id) {
-      socket.emit("join", {
-        userId: captain._id,
-        userType: "captain",
+ useEffect(() => {
+  if (!socket || !captain?._id) return;
+
+  socket.emit("join", {
+    userId: captain._id,
+    userType: "captain",
+  });
+
+  const updateLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        socket.emit("update-location-captain", {
+          userId: captain._id,
+          location: {
+            ltd: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        });
       });
-
-      const updateLocation = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            console.log({
-              userId: captain._id,
-              location: {
-                ltd: position.coords.latitude,
-                lng: position.coords.longitude,
-              },
-            });
-
-            socket.emit("update-location-catain", {
-              userId: captain._id,
-              location: {
-                ltd: position.coords.latitude,
-                lng: position.coords.longitude,
-              },
-            });
-          });
-        }
-      };
-
-      const locationInterval = setInterval(updateLocation, 5000); // Update every 5 seconds
-      updateLocation(); // Initial update
     }
-  }, [socket, captain]);
+  };
+
+  const locationInterval = setInterval(updateLocation, 5000);
+  updateLocation();
+
+  const handleNewRide = (ride) => {
+    console.log("New ride received:", ride);
+    setRidePopUpPanel(true);
+  };
+
+  socket.on("new-ride", handleNewRide);
+
+  return () => {
+    clearInterval(locationInterval);
+    socket.off("new-ride", handleNewRide);
+  };
+}, [socket, captain?._id]);
+
+  socket?.on("new-ride", (ride) => {
+    console.log("New ride received:", ride);
+    // setRidePopUpPanel(true);
+  });
 
   useGSAP(
     function () {
