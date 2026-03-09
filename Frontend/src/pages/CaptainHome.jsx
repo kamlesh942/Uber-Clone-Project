@@ -50,6 +50,10 @@ const CaptainHome = () => {
     console.log("New ride received:", ride);
     setRidePopUpPanel(true);
   };
+  // socket?.on("new-ride", (ride) => {
+  //   console.log("New ride received:", ride);
+  //   // setRidePopUpPanel(true);
+  // });
 
   socket.on("new-ride", handleNewRide);
 
@@ -59,10 +63,7 @@ const CaptainHome = () => {
   };
 }, [socket, captain?._id]);
 
-  socket?.on("new-ride", (ride) => {
-    console.log("New ride received:", ride);
-    // setRidePopUpPanel(true);
-  });
+  
 
   useGSAP(
     function () {

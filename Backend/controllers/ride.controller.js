@@ -3,6 +3,7 @@ const rideService = require("../services/ride.service");
 const { validationResult } = require("express-validator");
 const mapService = require("../services/maps.service");
 const { sendMessageToSocketId } = require("../socket");
+const rideModel = require("../models/ride.model");
 
 module.exports.createRide = async (req, res, next) => {
   const errors = validationResult(req);
@@ -16,60 +17,72 @@ module.exports.createRide = async (req, res, next) => {
       message: "User not authenticated",
     });
   }
-  const { userId, pickup, destination, vehicleType } = req.body;
+
+  const { pickup, destination, vehicleType } = req.body;
+
   try {
+
     const ride = await rideService.createRide({
       user: req.user._id,
       pickup,
       destination,
       vehicleType,
     });
-    // res.status(201).json(ride);
 
     const pickupCoordinates = await mapService.getAddressCoordinates(pickup);
-
-    // console.log("Pickup Coordinates:", pickupCoordinates); // DEBUG
 
     if (
       !pickupCoordinates ||
       typeof pickupCoordinates.lat !== "number" ||
-      typeof pickupCoordinates.lng !== "number" ||
-      Number.isNaN(pickupCoordinates.lat) ||
-      Number.isNaN(pickupCoordinates.lng)
+      typeof pickupCoordinates.lng !== "number"
     ) {
       return res.status(400).json({
         message: "Invalid pickup coordinates",
       });
     }
 
-    // console.log("Pickup coordinates:", pickupCoordinates);
-
     const captainInRadius = await mapService.getCaptainsinTheRadius(
       pickupCoordinates.lng,
       pickupCoordinates.lat,
-      5,
-    ); // 5 km radius
+      5
+    );
+
     console.log("Captains in radius:", captainInRadius);
 
     ride.otp = "";
-    
-    captainInRadius.forEach((captain) => {
-      console.log("Captain:", captain._id);
-      console.log("Ride:", ride._id);
 
-      sendMessageToSocketId(captain.socketId, {
-        event: "new-ride",
-        data: ride,
-      });
-    });
+    const rideWithUSer = await rideModel.findOne({ _id: ride._id }).populate("user");
 
+    // SEND RIDE TO CAPTAINS
+    for (const captain of captainInRadius) {
+
+      if (captain.socketId) {
+
+        console.log("Sending ride to captain:", captain._id);
+
+        sendMessageToSocketId(captain.socketId, {
+          event: "new-ride",
+          data: rideWithUSer,
+        });
+
+      }
+
+    }
+
+    // SEND RESPONSE ONLY ONCE
     return res.status(201).json({
       ride,
       captainInRadius,
     });
+
   } catch (error) {
+
     console.error("Error in createRide controller:", error);
-    return res.status(500).json({ message: error.message });
+
+    if (!res.headersSent) {
+      return res.status(500).json({ message: error.message });
+    }
+
   }
 };
 

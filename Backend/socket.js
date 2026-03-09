@@ -31,9 +31,9 @@ function initializeSocket(server) {
       }
     });
 
-    socket.on('update-location-catain', async (data) => {
+    socket.on('update-location-captain', async (data) => {
       const { userId, location } = data;
-      if (!userId || !location.ltd || !location.lng) {
+      if (!userId || !location.ltd==null || !location.lng==null) {
         return socket.emit("error", "Invalid location data");
       }
       await captainModel.findByIdAndUpdate(userId, {
@@ -52,11 +52,12 @@ function initializeSocket(server) {
   });
 }
 
-function sendMessageToSocketId(socketId, message) {
+function sendMessageToSocketId(socketId, messageObject) {
   if (io) {
-    io.to(socketId).emit("message", message);
-  } else {
-    console.log("Socket.io is not initialized yet.");
+    io.to(socketId).emit(messageObject.event, messageObject.data);
+  }
+  else{
+    console.error("Socket.io not initialized. Cannot send message.");
   }
 }
 

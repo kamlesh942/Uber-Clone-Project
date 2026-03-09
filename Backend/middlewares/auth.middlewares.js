@@ -29,7 +29,7 @@ module.exports.authUser = async (req, res, next) => {
     }
 
     req.user = user;
-    console.log("Decoded:", decoded);
+    // console.log("Decoded:", decoded);
     console.log("User found:", user);
     return next();
   } catch (err) {
